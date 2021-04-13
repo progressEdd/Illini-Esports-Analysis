@@ -21,8 +21,8 @@ text
 voice = read.csv("popular-voice-channels.csv")
 voice
 
-communicators = read.csv("guild-communicators.csv")
-communicators
+communicator = read.csv("guild-communicators.csv")
+communicator
 ```
 # ETL on Growth and Activation
 ## messing around with date time
@@ -140,6 +140,20 @@ day = weekdays(as.POSIXlt(source[,1]))
 sources = cbind(source, year, month,day)
 sources = sources[,c(1,5,6,7,2,3,4)]
 sources
+
+
+# substring replacement
+communicator[,1] = gsub("\\+.*", 'Z', communicator[,1])
+
+# individual extraction
+year = year(as.POSIXlt(communicator[,1]))
+month = months(as.POSIXlt(communicator[,1]))
+day = weekdays(as.POSIXlt(communicator[,1]))
+
+# appending new indivually extracted dates
+communicators = cbind(communicator, year, month,day)
+communicators = communicators[,c(1,4,5,6,2,3)]
+communicators
 ```
 # data needed for investigation
 ```{r}
@@ -147,7 +161,11 @@ joins
 leaves
 sources
 ```
-
+```{r}
+text
+voice
+communicators
+```
 # messing with top values
 ```{r}
 # dataframe_name[with(dataframe_name, order(column_name)), ]
