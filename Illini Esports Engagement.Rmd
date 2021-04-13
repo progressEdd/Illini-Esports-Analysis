@@ -24,36 +24,54 @@ voice
 communicators = read.csv("guild-communicators.csv")
 communicators
 ```
-# EDA on Engagement
+# ETL on Growth and Activation
 ## messing around with date time
 ### library
 ```{r}
 library(lubridate)
 ```
-## datetime example
+### datetime example
+I grabbed this example from [astrostats.psu](https://astrostatistics.psu.edu/su07/R/html/base/html/format.Date.html)
 ```{R}
 ## read in date/time info in format 'm/d/y h:m:s'
 dates <- c("02/27/92", "02/27/92", "01/14/92", "02/28/92", "02/01/92")
 times <- c("23:03:20", "22:29:56", "01:03:30", "18:21:03", "16:56:26")
 x <- paste(dates, times)
 strptime(x, "%m/%d/%y %H:%M:%S")
+strptime(x, "%m/")
 
 ```
+### tests to investigate how to extract date time
+These were scuffed tests I used to learn how to extract the date time
+* the variable `test` made me realize removing `+00:00` and replacing it with a `Z` would make the data in a format that can be read by R
+* the variable `test2` was my attempt to try getting it for an entire column
 
 ```{r}
 test = "2021-03-27T00:00:00Z"
+str(ymd_hms(test))
+
 test2 = join$interval_start_timestamp
 #test2
-#str(ymd_hms(test))
 #ymd_hms(join$interval_start_timestamp)
 
-strptime(test2, "%Y-%m-%dT%H:%M:%SZ")
+#strptime(test2, "%Y-%m-%dT%H:%M:%SZ")
 ```
-## testing substring removal
+While performing my tests, I struggled understanding format of the date was in, a search of a [2021-03-27T00:00:00+00:00 datatype](https://duckduckgo.com/?q=2021-03-27T00%3A00%3A00%2B00%3A00+datatype&t=ffab&ia=web) pointed me to a stack overflow page that helped me learn more about python functions [Date Time Formats in Python](https://stackoverflow.com/questions/17594298/date-time-formats-in-python).
+
+### testing substring removal
+* with a understanding of what I needed to make it possible, I moved on to learn about substring replacement. This took a long time to figure out and understand.
+
+#### removing the plus sign
+a search of [R remove all text after plus sign](https://duckduckgo.com/?q=R+remove+all+text+after+plus+sign&t=ffab&ia=web) helped me break through this barrier I found that this answer on stackoverflow was particularly helpful in removing the `+` sign [How to remove + (plus sign) from string in R?](https://stackoverflow.com/a/35807737)
+
+#### removing the rest of zeros
+I found the following stackoverflow answer that had a example for how to remove the rest of a string [Remove all text before colon](https://stackoverflow.com/a/12297991)
+
 ```{r}
 gsub("\\+.*", 'Z', "2021-03-27T00:00:00+00:00")
 ```
-## removing +00:00
+## removing +00:00 from the whole column
+these were tests I ran to automate this for all the datetime rows
 ```{r}
 #join[1,1] = gsub("\\+.*", 'Z', join[1,1])
 #join
@@ -62,6 +80,74 @@ join[,1] = gsub("\\+.*", 'Z', join[,1])
 join
 
 ```
+### split the `interval_start_timestamp`
+Once I got it working on a row, I applied what I learned above to extract the year, month, and day from the initial datetime object
+```{r}
+year = year(as.POSIXlt(join$interval_start_timestamp))
+
+month = months(as.POSIXlt(join$interval_start_timestamp))
+
+day = weekdays(as.POSIXlt(join$interval_start_timestamp))
+```
+
+## make the new dataframe
+After making the split dataframes, I used a cbind to append the columns to the original dataset and reordered the dataset.
+```{r}
+joins = cbind(join, year, month,day)
+joins
+
+joins = joins[,c(1,5,6,7,2,3,4)]
+joins
+```
+## Extracting date time
+run the following cell to extract year, month, day
+```{r}
+# substring replacement
+join[,1] = gsub("\\+.*", 'Z', join[,1])
+
+# individual extraction
+year = year(as.POSIXlt(join[,1]))
+month = months(as.POSIXlt(join[,1]))
+day = weekdays(as.POSIXlt(join[,1]))
+
+# appending new indivually extracted dates
+joins = cbind(join, year, month,day)
+joins = joins[,c(1,5,6,7,2,3,4)]
+joins
+
+# substring replacement
+leave[,1] = gsub("\\+.*", 'Z', leave[,1])
+
+# individual extraction
+year = year(as.POSIXlt(leave[,1]))
+month = months(as.POSIXlt(leave[,1]))
+day = weekdays(as.POSIXlt(leave[,1]))
+
+# appending new indivually extracted dates
+leaves = cbind(leave, year, month,day)
+leaves = leaves[,c(1,4,5,6,2,3)]
+leaves
+
+# substring replacement
+source[,1] = gsub("\\+.*", 'Z', source[,1])
+
+# individual extraction
+year = year(as.POSIXlt(source[,1]))
+month = months(as.POSIXlt(source[,1]))
+day = weekdays(as.POSIXlt(source[,1]))
+
+# appending new indivually extracted dates
+sources = cbind(source, year, month,day)
+sources = sources[,c(1,5,6,7,2,3,4)]
+sources
+```
+# data needed for investigation
+```{r}
+joins
+leaves
+sources
+```
+
 # messing with top values
 ```{r}
 # dataframe_name[with(dataframe_name, order(column_name)), ]
