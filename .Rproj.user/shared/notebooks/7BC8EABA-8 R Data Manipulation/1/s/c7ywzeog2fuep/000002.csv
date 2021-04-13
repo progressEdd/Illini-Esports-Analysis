@@ -1,0 +1,4 @@
+"0","```r
+sale2 = data.frame(brand=\"pepsi\", sale =95)
+sale2
+```"

@@ -1,0 +1,6 @@
+"0","```r
+colnames(df)
+```"
+"1","[1] \"TVolume\"        \"DirectTweet\"    \"Bitcoinvolume\"  \"SPClose\"        \"SPvolume\"       \"Bitcoinclose\"   \"Bitcoincap\"    
+[8] \"TokenSalePrice\" \"USDRaised\"     
+"

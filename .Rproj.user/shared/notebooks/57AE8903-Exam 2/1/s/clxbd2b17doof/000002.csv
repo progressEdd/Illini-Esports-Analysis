@@ -1,0 +1,4 @@
+"0","```r
+ptree <- prune(tree, cp = tree$cptable[which.min(tree$cptable[,\"xerror\"]), \"CP\"])
+post_prune = rpart.plot(ptree, type=4,cex=.8, digits = -3)
+```"

@@ -1,0 +1,4 @@
+"0","```r
+state_length_mean <- aggregate (df$View_length, list(df$State), mean)
+state_length_mean
+```"

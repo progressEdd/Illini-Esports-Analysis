@@ -1,0 +1,30 @@
+"0","```r
+summary(df_f)
+```"
+"1","    Friends       Participant         Score      
+ Min.   :102.0   Min.   :  1.00   Min.   :1.000  
+ 1st Qu.:302.0   1st Qu.: 34.25   1st Qu.:3.600  
+ Median :502.0   Median : 67.50   Median :4.600  
+ Mean   :488.6   Mean   : 67.50   Mean   :4.382  
+ 3rd Qu.:702.0   3rd Qu.:100.75   3rd Qu.:5.200  
+ Max.   :902.0   Max.   :134.00   Max.   :7.000  
+    GroupNum    
+ Min.   :1.000  
+ 1st Qu.:2.000  
+ Median :3.000  
+ Mean   :2.933  
+ 3rd Qu.:4.000  
+ Max.   :5.000  
+"
+"0","```r
+str(df_f)
+```"
+"1","'data.frame':	134 obs. of  4 variables:
+ $ Friends    : int  102 102 102 102 102 102 102 102 102 102 ...
+ $ Participant: int  1 2 3 4 5 6 7 8 9 10 ...
+ $ Score      : num  3.8 3.6 3.2 2.4 4.8 3 4.2 3.6 3.2 3 ...
+ $ GroupNum   : int  1 1 1 1 1 1 1 1 1 1 ...
+"
+"0","```r
+head(df_f)
+```"

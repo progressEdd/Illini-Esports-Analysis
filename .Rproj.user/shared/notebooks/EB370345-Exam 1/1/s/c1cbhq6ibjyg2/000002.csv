@@ -1,0 +1,7 @@
+"0","```r
+table(KNNtest$USDRaised,KNNtest$predictknn)
+```"
+"1","          
+           high low medium Veryhigh
+  Veryhigh   13   8      5        0
+"

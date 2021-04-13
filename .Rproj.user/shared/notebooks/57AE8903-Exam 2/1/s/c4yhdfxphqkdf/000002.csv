@@ -1,0 +1,18 @@
+"0","```r
+Ran <-randomForest( USDRaised ~.,  data=df, na.action=na.omit ,  ntree=500,
+                   importance=TRUE, mtry=5)
+Ran
+```"
+"1","
+Call:
+ randomForest(formula = USDRaised ~ ., data = df, ntree = 500,      importance = TRUE, mtry = 5, na.action = na.omit) 
+               Type of random forest: classification
+                     Number of trees: 500
+No. of variables tried at each split: 5
+
+        OOB estimate of  error rate: 22.92%
+Confusion matrix:
+   0  1 class.error
+0 54 16   0.2285714
+1 17 57   0.2297297
+"

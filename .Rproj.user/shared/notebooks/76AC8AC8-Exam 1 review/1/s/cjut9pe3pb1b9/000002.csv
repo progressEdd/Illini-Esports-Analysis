@@ -1,0 +1,5 @@
+"0","```r
+options(scipen=999)
+df <- read.csv(\"~/Documents/BADM 557/Rscripts/8_Review excercise.csv\")
+df
+```"

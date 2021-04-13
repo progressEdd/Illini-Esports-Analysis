@@ -1,0 +1,5 @@
+"0","```r
+tree <- rpart(USDRaised ~ . , trainset, method = \"class\")
+plot(tree)
+text(tree)
+```"

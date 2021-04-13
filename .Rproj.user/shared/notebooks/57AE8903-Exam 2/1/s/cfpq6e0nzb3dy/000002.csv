@@ -1,0 +1,14 @@
+"0","```r
+tp = 57
+tn = 54
+fp = 16
+fn = 17
+actual_p = tp + tn
+actual_n = fn + fp
+all = tp + tn + fp + fn
+accuracy = (tp + tn) / all
+
+print(c(\"accuracy \", accuracy))
+```"
+"1","[1] \"accuracy \"         \"0.770833333333333\"
+"

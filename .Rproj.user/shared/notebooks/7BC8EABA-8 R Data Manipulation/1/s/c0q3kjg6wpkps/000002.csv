@@ -1,0 +1,4 @@
+"0","```r
+softdrink= read.csv(\"Softdrink.csv\", header=T)
+softdrink
+```"

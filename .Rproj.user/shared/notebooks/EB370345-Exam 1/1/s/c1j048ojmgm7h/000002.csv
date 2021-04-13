@@ -1,0 +1,6 @@
+"0","```r
+range_TVolume <- range(df$TVolume)
+range_TVolume
+```"
+"1","[1]     0 17780
+"

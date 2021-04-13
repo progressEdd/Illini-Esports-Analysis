@@ -1,0 +1,6 @@
+"0","```r
+data4 = data.frame(experience=c(10,12))
+data5 = cbind(data3, data4)
+
+data5
+```"

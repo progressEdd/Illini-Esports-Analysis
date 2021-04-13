@@ -1,0 +1,8 @@
+"0","```r
+table(predict_tree, testset$USDRaised)
+```"
+"1","            
+predict_tree  0  1
+           0 13  2
+           1  2 12
+"

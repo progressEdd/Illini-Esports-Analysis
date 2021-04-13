@@ -1,0 +1,4 @@
+"0","```r
+friendsG1 = df_f[df_f$GroupNum==1,]
+friendsG1
+```"

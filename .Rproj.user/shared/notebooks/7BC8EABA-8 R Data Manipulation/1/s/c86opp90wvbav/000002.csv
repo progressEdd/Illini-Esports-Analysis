@@ -1,0 +1,4 @@
+"0","```r
+gas.feb = gas[gas$Month == \"Feb\",]
+gas.feb
+```"

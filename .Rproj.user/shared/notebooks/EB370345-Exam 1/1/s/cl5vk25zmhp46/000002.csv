@@ -1,0 +1,9 @@
+"0","```r
+#---------------Validate the model
+predictknn<-predict(fit,KNNtest)
+predictknn
+```"
+"1"," [1] low    high   high   low    high   medium medium low    low    low    high   high   medium high   high   high   low    high  
+[19] low    high   high   medium medium high   high   low   
+Levels: high low medium Veryhigh
+"

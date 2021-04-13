@@ -1,0 +1,4 @@
+"0","```r
+mf_length <- aggregate (df$View_length, list(df$Gender), mean)
+mf_length
+```"

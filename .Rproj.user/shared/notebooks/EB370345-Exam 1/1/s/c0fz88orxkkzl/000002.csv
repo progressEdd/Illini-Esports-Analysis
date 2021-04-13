@@ -1,0 +1,5 @@
+"0","```r
+#add prediction to test dataset to check accuracy
+KNNtest<-cbind(KNNtest,predictknn)
+KNNtest
+```"

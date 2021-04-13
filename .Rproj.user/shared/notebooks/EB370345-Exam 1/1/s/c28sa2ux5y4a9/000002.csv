@@ -1,0 +1,4 @@
+"0","```r
+# df$Listing.Price[df$Zip==61822]
+hist(df$TVolume[df$USDRaised==\"low\"], main = \"Distribution of Bitcoin volume\", xlab = \"TVolume\", ylab = \"Frequency\")
+```"

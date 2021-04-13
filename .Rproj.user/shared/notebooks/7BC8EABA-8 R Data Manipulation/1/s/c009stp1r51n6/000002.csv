@@ -1,0 +1,7 @@
+"0","```r
+name = c(\"John\", \"Mary\" )
+spending = c(1732,2644)
+experience = c(11,17)
+customer = data.frame(name,spending,experience)
+customer
+```"

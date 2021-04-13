@@ -1,0 +1,33 @@
+"0","```r
+
+
+#---------------Validate the model
+predictknn<-predict(fit,KNNtest)
+predictknn
+```"
+"1","[1] N Y N N N
+Levels: N Y
+"
+"0","```r
+#add prediction to test dataset to check accuracy
+KNNtest<-cbind(KNNtest,predictknn)
+View(KNNtest)
+
+#since the target variable is continues, we calculate the standard error
+error=sqrt(sum((KNNtest$predictknn-KNNtest$Like)^2))/nrow(KNNtest)
+```"
+"1","‘-’ not meaningful for factors
+"
+"0","```r
+error
+```"
+"1","[1] NA
+"
+"0","```r
+table(KNNtest$Like,KNNtest$predictknn)
+```"
+"1","   
+    N Y
+  N 4 0
+  Y 0 1
+"

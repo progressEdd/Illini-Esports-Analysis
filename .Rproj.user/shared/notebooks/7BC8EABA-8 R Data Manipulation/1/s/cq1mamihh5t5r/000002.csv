@@ -1,0 +1,9 @@
+"0","```r
+table(softdrink$Brand.Purchased)
+```"
+"1","
+Coke Classic    Diet Coke   Dr. Pepper        Pepsi 
+          19            8            5           13 
+      Sprite 
+           5 
+"

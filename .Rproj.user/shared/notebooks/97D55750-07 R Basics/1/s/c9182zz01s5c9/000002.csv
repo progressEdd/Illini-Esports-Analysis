@@ -1,0 +1,8 @@
+"0","```r
+x = c(1,2,3)
+y = c(5,6,7,8)
+z = c(x, y) # combining two vectors
+a = c(1:20)
+a = c(20:1) # will do it backwards
+a = 1:20 # will make a data series
+```"

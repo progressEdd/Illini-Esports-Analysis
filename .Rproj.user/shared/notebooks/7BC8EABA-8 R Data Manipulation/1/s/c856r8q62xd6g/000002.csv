@@ -1,0 +1,5 @@
+"0","```r
+df_f = read.csv(\"friends.csv\")
+df_s = read.csv(\"Softdrink.csv\")
+df_f
+```"

@@ -1,0 +1,5 @@
+"0","```r
+gas=read.csv(\"gas_consumption.csv\")
+gas = read.table(\"gas_consumption.csv\", header = T, sep=',')
+gas
+```"

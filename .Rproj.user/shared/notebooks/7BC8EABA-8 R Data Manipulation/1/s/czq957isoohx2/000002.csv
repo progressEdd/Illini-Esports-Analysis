@@ -1,0 +1,4 @@
+"0","```r
+iq= read.csv(\"iq.csv\", header=T)
+iq
+```"

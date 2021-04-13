@@ -1,0 +1,4 @@
+"0","```r
+sale = rbind(sale1, sale2)
+sale
+```"

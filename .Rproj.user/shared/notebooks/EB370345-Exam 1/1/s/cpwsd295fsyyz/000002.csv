@@ -1,0 +1,4 @@
+"0","```r
+BCvolume_USD <- aggregate (df$Bitcoinvolume, list(df$USDRaised), mean)
+BCvolume_USD
+```"

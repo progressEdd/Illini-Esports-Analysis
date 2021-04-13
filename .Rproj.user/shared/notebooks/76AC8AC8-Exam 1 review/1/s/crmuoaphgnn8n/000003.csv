@@ -1,0 +1,39 @@
+"0","```r
+fit <- train( KNNtrain[,-4],   KNNtrain$Like,
+              preProcess = c(\"center\",\"scale\"),
+              method = \"knn\",
+              tuneLength = 10)
+
+fit
+```"
+"1","k-Nearest Neighbors 
+
+35 samples
+ 3 predictor
+ 2 classes: 'N', 'Y' 
+
+Pre-processing: centered (3), scaled (3) 
+Resampling: Bootstrapped (25 reps) 
+Summary of sample sizes: 35, 35, 35, 35, 35, 35, ... 
+Resampling results across tuning parameters:
+
+  k   Accuracy   Kappa     
+   5  0.7193873  0.28959509
+   7  0.7292498  0.32766746
+   9  0.7151374  0.22137390
+  11  0.7039493  0.17515222
+  13  0.7283293  0.18809581
+  15  0.7209959  0.12939683
+  17  0.7129786  0.07509108
+  19  0.7093423  0.05824897
+  21  0.7076453  0.03793318
+  23  0.7104786  0.02536585
+
+Accuracy was used to select the optimal model using
+ the largest value.
+The final value used for the model was k = 7.
+"
+"0","```r
+#RMSE root-mean-square error, MAE mean absolute error,
+plot(fit)
+```"

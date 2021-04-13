@@ -1,0 +1,12 @@
+"0","```r
+mean_TVol <- mean(df$TVolume, na.rm = TRUE)
+sd_TVol <- sd(df$TVolume, na.rm = TRUE)
+print(mean_TVol)
+```"
+"1","[1] 1593.164
+"
+"0","```r
+print(sd_TVol)
+```"
+"1","[1] 2722.279
+"

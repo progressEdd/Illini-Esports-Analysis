@@ -1,0 +1,12 @@
+"0","```r
+mean_age = mean(df$Age, na.rm = TRUE)
+sd_age = sd(df$Age, na.rm = TRUE)
+print(mean_age)
+```"
+"1","[1] 33.89744
+"
+"0","```r
+print(sd_age)
+```"
+"1","[1] 8.840085
+"

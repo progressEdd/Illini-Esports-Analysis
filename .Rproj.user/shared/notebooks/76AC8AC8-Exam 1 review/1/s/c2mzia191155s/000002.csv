@@ -1,0 +1,7 @@
+"0","```r
+plot(x=df$Friends, y=df$Age, 
+     main = \"Age Vs Number of Friends\", 
+     xlab = \"Number of Friends\",
+     ylab = \"Age\"
+     )
+```"

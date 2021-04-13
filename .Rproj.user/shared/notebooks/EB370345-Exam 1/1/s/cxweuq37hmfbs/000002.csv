@@ -1,0 +1,15 @@
+"0","```r
+class(df$Bitcoinvolume)
+```"
+"1","[1] \"numeric\"
+"
+"0","```r
+class(df$SPClose)
+```"
+"1","[1] \"character\"
+"
+"0","```r
+class(df$Bitcoinclose)
+```"
+"1","[1] \"character\"
+"

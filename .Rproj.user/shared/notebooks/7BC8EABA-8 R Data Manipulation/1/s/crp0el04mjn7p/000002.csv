@@ -1,0 +1,6 @@
+"0","```r
+data1 = data.frame(name=\"Mike\", income=50)
+data2 = data.frame(name=\"Jack\", income=60)
+data3 = rbind(data1, data2)
+data3
+```"

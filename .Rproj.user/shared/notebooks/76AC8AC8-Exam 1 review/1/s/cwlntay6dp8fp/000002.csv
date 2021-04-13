@@ -1,0 +1,4 @@
+"0","```r
+hist(df$Age, main = \"Distribution of age\", xlab = \"Age\", breaks = 10, xlim = c(0,80), ylim = c(0,20),
+     col = as.factor(df$Like))
+```"

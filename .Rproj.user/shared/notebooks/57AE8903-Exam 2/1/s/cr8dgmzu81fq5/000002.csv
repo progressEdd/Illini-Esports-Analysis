@@ -1,0 +1,23 @@
+"0","```r
+printcp(tree)
+```"
+"1","
+Classification tree:
+rpart(formula = USDRaised ~ ., data = trainset, method = \"class\")
+
+Variables actually used in tree construction:
+[1] DirTweet       TokenSalePrice Tvolume       
+
+Root node error: 56/117 = 0.47863
+
+n= 117 
+
+        CP nsplit rel error  xerror     xstd
+1 0.553571      0   1.00000 1.19643 0.095552
+2 0.089286      1   0.44643 0.51786 0.083399
+3 0.035714      2   0.35714 0.48214 0.081381
+4 0.010000      4   0.28571 0.35714 0.072714
+"
+"0","```r
+plotcp(tree)
+```"

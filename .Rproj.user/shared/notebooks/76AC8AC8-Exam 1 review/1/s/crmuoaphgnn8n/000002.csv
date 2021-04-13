@@ -1,0 +1,79 @@
+"0","```r
+library(caret)
+
+KNNdata <- df[,c(2,5,6,7)]     
+
+colnames(KNNdata) #look at what columns are in the new dataframe
+```"
+"1","[1] \"Age\"         \"Friends\"     \"View_length\" \"Like\"       
+"
+"0","```r
+#-----split data into training and testing
+# use training set to find out the best k (how many neighbor to use)
+# use testing set to predict the value of target variable
+nrow(KNNdata)
+```"
+"1","[1] 40
+"
+"0","```r
+KNNtrain<-KNNdata[c(1:35),] #select first 200 rows as training set to find the best k
+
+KNNtest<-KNNdata[c(36:40),] #predict the value of traditional cash on cash for the last 96 rows
+
+is.na(KNNtrain)
+```"
+"1","     Age Friends View_length  Like
+1  FALSE   FALSE       FALSE FALSE
+2  FALSE   FALSE       FALSE FALSE
+3  FALSE   FALSE       FALSE FALSE
+4  FALSE   FALSE       FALSE FALSE
+5  FALSE   FALSE       FALSE FALSE
+6  FALSE   FALSE       FALSE FALSE
+7   TRUE   FALSE       FALSE FALSE
+8  FALSE   FALSE       FALSE FALSE
+9  FALSE   FALSE       FALSE FALSE
+10 FALSE   FALSE       FALSE FALSE
+11 FALSE   FALSE       FALSE FALSE
+12 FALSE   FALSE       FALSE FALSE
+13 FALSE   FALSE       FALSE FALSE
+14 FALSE   FALSE       FALSE FALSE
+15 FALSE   FALSE       FALSE FALSE
+16 FALSE   FALSE       FALSE FALSE
+17 FALSE   FALSE       FALSE FALSE
+18 FALSE   FALSE       FALSE FALSE
+19 FALSE   FALSE       FALSE FALSE
+20 FALSE   FALSE       FALSE FALSE
+21 FALSE   FALSE       FALSE FALSE
+22 FALSE   FALSE       FALSE FALSE
+23 FALSE   FALSE       FALSE FALSE
+24 FALSE   FALSE       FALSE FALSE
+25 FALSE   FALSE       FALSE FALSE
+26 FALSE   FALSE       FALSE FALSE
+27 FALSE   FALSE       FALSE FALSE
+28 FALSE   FALSE       FALSE FALSE
+29 FALSE   FALSE       FALSE FALSE
+30 FALSE   FALSE       FALSE FALSE
+31 FALSE   FALSE       FALSE FALSE
+32 FALSE   FALSE       FALSE FALSE
+33 FALSE   FALSE       FALSE FALSE
+34 FALSE   FALSE       FALSE FALSE
+35 FALSE   FALSE       FALSE FALSE
+"
+"0","```r
+KNNtrain[is.na(KNNtrain)]<-0 #change missing values to 0
+KNNtest[is.na(KNNtest)]<-0
+
+
+#-------run Knn ------
+?train
+set.seed(1) 
+#setseed will make sure the calculation start from the same line
+#so you will always get the same results
+
+colnames(KNNtrain)
+```"
+"1","[1] \"Age\"         \"Friends\"     \"View_length\" \"Like\"       
+"
+"0","```r
+KNNtrain
+```"

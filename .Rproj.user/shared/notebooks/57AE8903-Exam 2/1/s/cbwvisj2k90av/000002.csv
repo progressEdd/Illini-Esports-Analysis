@@ -1,0 +1,17 @@
+"0","```r
+tp = 12
+tn = 13
+fp = 2
+fn = 2
+actual_p = tp + tn
+actual_n = fn + fp
+all = tp + tn + fp + fn
+
+accuracy = (tp + tn) / all
+sensitivity = tp / actual_p
+specificity = tn / actual_n
+print(c(\"accuracy \", accuracy, \"sensitivity\", sensitivity, \"specificity\", specificity))
+```"
+"1","[1] \"accuracy \"         \"0.862068965517241\" \"sensitivity\"       \"0.48\"              \"specificity\"      
+[6] \"3.25\"             
+"

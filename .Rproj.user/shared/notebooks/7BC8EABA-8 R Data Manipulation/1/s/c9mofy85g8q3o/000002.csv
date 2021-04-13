@@ -1,0 +1,10 @@
+"0","```r
+# Example
+name = c(\"Mary\", \"Mike\") 
+midterm = c(86, 90) 
+major = c(\"Math\", \"Management\")
+df1 = data.frame(name, midterm, major)
+df2 = data.frame(name=\"Alex\", age=30, creditlimit=5000)
+
+df1
+```"

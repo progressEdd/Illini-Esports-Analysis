@@ -1,0 +1,6 @@
+"0","```r
+colnames(df)
+
+```"
+"1","[1] \"ID\"          \"Age\"         \"Gender\"      \"State\"       \"Friends\"     \"View_length\" \"Like\"       
+"

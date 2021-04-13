@@ -1,0 +1,4 @@
+"0","```r
+TVolume_USD <- aggregate (df$TVolume, list(df$USDRaised), mean)
+TVolume_USD
+```"
