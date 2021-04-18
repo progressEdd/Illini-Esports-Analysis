@@ -82,10 +82,11 @@ join
 ```
 ### split the `interval_start_timestamp`
 Once I got it working on a row, I applied what I learned above to extract the year, month, and day from the initial datetime object
+Later when I was generating the bar charts, I had issues ordering the data by calendar months, a quick search yielded [Sorting months in R](https://stackoverflow.com/a/9769735) I learned that passing `months` into `factor` with the `levels = month.name` would allow me to sort by the months
 ```{r}
 year = year(as.POSIXlt(join$interval_start_timestamp))
 
-month = months(as.POSIXlt(join$interval_start_timestamp))
+month = factor(months(as.POSIXlt(join$interval_start_timestamp)),levels = month.name)
 
 day = weekdays(as.POSIXlt(join$interval_start_timestamp))
 ```
@@ -102,12 +103,14 @@ joins
 ## Extracting date time
 run the following cell to extract year, month, day
 ```{r}
+factor(months(as.POSIXlt(join$interval_start_timestamp)),levels = month.name)
+
 # substring replacement
 join[,1] = gsub("\\+.*", 'Z', join[,1])
 
 # individual extraction
-year = year(as.POSIXlt(join[,1]))
-month = months(as.POSIXlt(join[,1]))
+year = factor(year(as.POSIXlt(join[,1])))
+month = factor(months(as.POSIXlt(join[,1])),levels = month.name)
 day = weekdays(as.POSIXlt(join[,1]))
 
 # appending new indivually extracted dates
@@ -119,8 +122,8 @@ joins
 leave[,1] = gsub("\\+.*", 'Z', leave[,1])
 
 # individual extraction
-year = year(as.POSIXlt(leave[,1]))
-month = months(as.POSIXlt(leave[,1]))
+year = factor(year(as.POSIXlt(leave[,1])))
+month = factor(months(as.POSIXlt(leave[,1])),levels = month.name)
 day = weekdays(as.POSIXlt(leave[,1]))
 
 # appending new indivually extracted dates
@@ -132,8 +135,8 @@ leaves
 source[,1] = gsub("\\+.*", 'Z', source[,1])
 
 # individual extraction
-year = year(as.POSIXlt(source[,1]))
-month = months(as.POSIXlt(source[,1]))
+year = factor(year(as.POSIXlt(source[,1])))
+month = factor(months(as.POSIXlt(source[,1])),levels = month.name)
 day = weekdays(as.POSIXlt(source[,1]))
 
 # appending new indivually extracted dates
@@ -146,13 +149,14 @@ sources
 communicator[,1] = gsub("\\+.*", 'Z', communicator[,1])
 
 # individual extraction
-year = year(as.POSIXlt(communicator[,1]))
-month = months(as.POSIXlt(communicator[,1]))
+year = factor(year(as.POSIXlt(communicator[,1])))
+month = factor(months(as.POSIXlt(communicator[,1])),levels = month.name)
 day = weekdays(as.POSIXlt(communicator[,1]))
 
 # appending new indivually extracted dates
 communicators = cbind(communicator, year, month,day)
 communicators = communicators[,c(1,4,5,6,2,3)]
+communicators$total_communicated = communicators$visitors * communicators$pct_communicated/100
 communicators
 ```
 # data needed for investigation
@@ -166,6 +170,201 @@ text
 voice
 communicators
 ```
+# extracting by year
+```{r}
+joins.2019 = subset(joins, year == 2019)
+joins.2020 = subset(joins, year == 2020)
+joins.2021 = subset(joins, year == 2021)
+
+leaves.2019 = subset(leaves, year == 2019)
+leaves.2020 = subset(leaves, year == 2020)
+leaves.2021 = subset(leaves, year == 2021)
+
+sources.2019 = subset(sources, year == 2019)
+sources.2020 = subset(sources, year == 2020)
+sources.2021 = subset(sources, year == 2021)
+
+comm.2019 = subset(communicators, year == 2019)
+comm.2020 = subset(communicators, year == 2020)
+comm.2021 = subset(communicators, year == 2021)
+```
+
+# investigating each year
+## 2019
+```{r}
+joins.2019
+leaves.2019
+sources.2019
+comm.2019
+```
+
+## 2020
+```{r}
+joins.2020
+leaves.2020
+sources.2020
+comm.2020
+```
+
+## 2021
+```{r}
+joins.2021
+leaves.2021
+sources.2021
+comm.2021
+```
+
+# Aggregating by month
+## 2019
+```{r}
+joins.2019
+leaves.2019
+comm.2019
+
+agg_joins.2019 = aggregate(joins.2019$new_members, list(joins.2019$month), sum)
+colnames(agg_joins.2019) <- c("Months", "Total New Members")
+agg_leaves.2019 = aggregate(leaves.2019$leavers, list(leaves.2019$month), sum)
+colnames(agg_leaves.2019) <- c("Months", "Total Leavers")
+agg_comm.2019 = aggregate(comm.2019$total_communicated, list(comm.2019$month), sum)
+colnames(agg_comm.2019) <- c("Months", "Total Communicated")
+
+agg_joins.2019[order(med_joins.2019$x),]
+agg_leaves.2019[order(med_leaves.2019$x),]
+agg_comm.2019[order(med_comm.2019$x),]
+```
+
+## 2020
+```{r}
+joins.2020
+leaves.2020
+comm.2020
+
+agg_joins.2020 = aggregate(joins.2020$new_members, list(joins.2020$month), sum)
+colnames(agg_joins.2020) <- c("Months", "Total New Members")
+agg_leaves.2020 = aggregate(leaves.2020$leavers, list(leaves.2020$month), sum)
+colnames(agg_leaves.2020) <- c("Months", "Total Leavers")
+agg_comm.2020 = aggregate(comm.2020$total_communicated, list(comm.2020$month), sum)
+colnames(agg_comm.2020) <- c("Months", "Total Communicated")
+
+
+agg_joins.2020[order(med_joins.2020$x),]
+agg_leaves.2020[order(med_leaves.2020$x),]
+agg_comm.2020[order(med_comm.2020$x),]
+```
+## 2021
+```{r}
+joins.2021
+leaves.2021
+comm.2021
+
+agg_joins.2021 = aggregate(joins.2021$new_members, list(joins.2021$month), sum)
+colnames(agg_joins.2021) <- c("Months", "Total New Members")
+agg_leaves.2021 = aggregate(leaves.2021$leavers, list(leaves.2021$month), sum)
+colnames(agg_leaves.2021) <- c("Months", "Total Leavers")
+agg_comm.2021 = aggregate(comm.2021$total_communicated, list(comm.2021$month), sum)
+colnames(agg_comm.2021) <- c("Months", "Total Communicated")
+
+
+
+agg_joins.2021[order(med_joins.2021$x),]
+agg_leaves.2021[order(med_leaves.2021$x),]
+agg_comm.2021[order(med_comm.2021$x),]
+```
+## testing aggregations
+```{r}
+communicators
+median_comm = aggregate(communicators$visitors, list(communicators$month), sum)
+median_comm[order(median_comm$x),]
+```
+
+# Aggregating by category
+## joins
+```{r}
+joins
+agg_joins = aggregate(new_members ~ month + year, data = joins, FUN = sum)
+agg_joins
+```
+## leaves
+```{r}
+leaves
+agg_leaves = aggregate(leavers ~ month + year, data = leaves, FUN = sum)
+agg_leaves
+```
+
+### experimental 3d agg
+```{r}
+leaves
+agg_leaves = aggregate(leavers ~ month + year + days_in_guild, data = leaves, FUN = sum)
+agg_leaves
+```
+
+## sources
+looks really weird ignoring for now
+```{r}
+sources
+agg_sources = aggregate(discovery_joins + invites + vanity_joins ~ month + year, data = sources, FUN = sum)
+agg_sources
+```
+
+## comms
+```{r}
+communicators
+agg_comms = aggregate(total_communicated ~ month + year, data = communicators, FUN = sum)
+agg_comms
+```
+
+
+# visualizations
+## all joins
+```{r}
+library(ggplot2)
+joins
+
+agg_joins.2019
+agg_joins.2020
+agg_joins.2021
+
+agg_joins
+
+all_joins = ggplot(data = agg_joins, mapping = aes(x = month, y = new_members, fill = year)) + xlab("Month") + ylab("Total New Members") + geom_col()+ geom_text(aes(label=new_members), position = position_stack(vjust= 0.5),
+            colour = "white", size = 5) + coord_flip()
+all_joins = all_joins + labs(title = "New Member Joins Across the Year")
+all_joins
+```
+
+## all leaves
+```{r}
+leaves
+agg_leaves.2019
+agg_leaves.2020
+agg_leaves.2021
+
+agg_leaves
+
+all_leaves = ggplot(data = agg_leaves, mapping = aes(x = month, y = leavers, fill = year)) + xlab("Month") + ylab("Total Leaves") + geom_col()+ geom_text(aes(label=leavers), position = position_stack(vjust= 0.5),
+            colour = "white", size = 5) + coord_flip()
+all_leaves = all_leaves + labs(title = "Member Leaves Across the Year")
+
+all_leaves
+```
+## all communicators
+```{r}
+communicators
+
+agg_comm.2019
+agg_comm.2020
+agg_comm.2021
+
+agg_comms
+
+all_comms = ggplot(data = agg_comms, mapping = aes(x = month, y = total_communicated, fill = year)) + xlab("Month") + ylab("Visitors") + geom_col()+ geom_text(aes(label=total_communicated), position = position_stack(vjust= 0.5),
+            colour = "white", size = 5) + coord_flip()
+all_comms = all_comms + labs(title = "All Visiting Communicators")
+
+all_comms
+```
+
+
 # messing with top values
 ```{r}
 # dataframe_name[with(dataframe_name, order(column_name)), ]
