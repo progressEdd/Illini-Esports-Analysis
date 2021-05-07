@@ -18,12 +18,21 @@ source
 text = read.csv("popular-text-channels.csv")
 text
 
-voice = read.csv("popular-voice-channels.csv")
+voice_channel = read.csv("popular-voice-channels.csv")
+voice_channel
+```
+# Message Activity
+```{r}
+message = read.csv("guild-message-activity.csv")
+message
+
+voice = read.csv("guild-voice-activity.csv")
 voice
 
 communicator = read.csv("guild-communicators.csv")
 communicator
 ```
+
 # ETL on Growth and Activation
 ## messing around with date time
 ### library
@@ -100,11 +109,17 @@ joins
 joins = joins[,c(1,5,6,7,2,3,4)]
 joins
 ```
+## testing if I could change the months to become a factor
+```{r}
+# test to see what would happen if I could convert a months output as a factor
+factor(months(as.POSIXlt(join$interval_start_timestamp)),levels = month.name)
+```
+
 ## Extracting date time
 run the following cell to extract year, month, day
-```{r}
-factor(months(as.POSIXlt(join$interval_start_timestamp)),levels = month.name)
 
+### joins extraction
+```{r}
 # substring replacement
 join[,1] = gsub("\\+.*", 'Z', join[,1])
 
@@ -117,20 +132,9 @@ day = weekdays(as.POSIXlt(join[,1]))
 joins = cbind(join, year, month,day)
 joins = joins[,c(1,5,6,7,2,3,4)]
 joins
-
-# substring replacement
-leave[,1] = gsub("\\+.*", 'Z', leave[,1])
-
-# individual extraction
-year = factor(year(as.POSIXlt(leave[,1])))
-month = factor(months(as.POSIXlt(leave[,1])),levels = month.name)
-day = weekdays(as.POSIXlt(leave[,1]))
-
-# appending new indivually extracted dates
-leaves = cbind(leave, year, month,day)
-leaves = leaves[,c(1,4,5,6,2,3)]
-leaves
-
+```
+### sources extraction
+```{r}
 # substring replacement
 source[,1] = gsub("\\+.*", 'Z', source[,1])
 
@@ -144,7 +148,59 @@ sources = cbind(source, year, month,day)
 sources = sources[,c(1,5,6,7,2,3,4)]
 sources
 
+```
+### leaves extraction
+```{r}
+# substring replacement
+leave[,1] = gsub("\\+.*", 'Z', leave[,1])
 
+# individual extraction
+year = factor(year(as.POSIXlt(leave[,1])))
+month = factor(months(as.POSIXlt(leave[,1])),levels = month.name)
+day = weekdays(as.POSIXlt(leave[,1]))
+
+# appending new indivually extracted dates
+leave
+leaves = cbind(leave, year, month,day)
+leaves
+leaves = leaves[,c(1,4,5,6,2,3)]
+leaves
+```
+
+### messages extraction
+```{r}
+# substring replacement
+message[,1] = gsub("\\+.*", 'Z', message[,1])
+
+# individual extraction
+year = factor(year(as.POSIXlt(message[,1])))
+month = factor(months(as.POSIXlt(message[,1])),levels = month.name)
+day = weekdays(as.POSIXlt(message[,1]))
+
+# appending new indivually extracted dates
+messages = cbind(message, year, month,day)
+messages
+messages = messages[,c(1,4,5,6,2,3)]
+messages
+```
+
+### voices extraction
+```{r}
+# substring replacement
+voice[,1] = gsub("\\+.*", 'Z', voice[,1])
+
+# individual extraction
+year = factor(year(as.POSIXlt(voice[,1])))
+month = factor(months(as.POSIXlt(voice[,1])),levels = month.name)
+day = weekdays(as.POSIXlt(voice[,1]))
+
+# appending new indivually extracted dates
+voices = cbind(voice, year, month,day)
+voices = voices[,c(1,3,4,5,2)]
+voices
+```
+### communicators extraction
+```{r}
 # substring replacement
 communicator[,1] = gsub("\\+.*", 'Z', communicator[,1])
 
@@ -152,23 +208,81 @@ communicator[,1] = gsub("\\+.*", 'Z', communicator[,1])
 year = factor(year(as.POSIXlt(communicator[,1])))
 month = factor(months(as.POSIXlt(communicator[,1])),levels = month.name)
 day = weekdays(as.POSIXlt(communicator[,1]))
+communicator
 
-# appending new indivually extracted dates
+# appending new individually extracted dates
 communicators = cbind(communicator, year, month,day)
 communicators = communicators[,c(1,4,5,6,2,3)]
 communicators$total_communicated = communicators$visitors * communicators$pct_communicated/100
+```
+## Additional modifications
+```{r}
+# marking covid and non covid months
+joins$year_type = as.double(joins$year)
+joins$year_type[joins$year_type == 1 ] <- "Normal"
+joins$year_type[joins$year_type == 2] <- "Covid"
+joins$year_type[joins$year_type == 3] <- "Covid"
+joins$year_type = as.factor(joins$year_type)
+joins$year_type = relevel(joins$year_type, ref = 2)
+joins
+
+leaves$year_type = as.double(leaves$year)
+leaves$year_type[leaves$year_type == 1 ] <- "Normal"
+leaves$year_type[leaves$year_type ==2] <- "Covid"
+leaves$year_type[leaves$year_type ==3] <- "Covid"
+leaves$year_type = as.factor(leaves$year_type)
+leaves$year_type = relevel(leaves$year_type, ref = 2)
+leaves
+
+sources$year_type = as.double(sources$year)
+sources$year_type[sources$year_type == 1 ] <- "Normal"
+sources$year_type[sources$year_type ==2] <- "Covid"
+sources$year_type[sources$year_type ==3] <- "Covid"
+sources$year_type = as.factor(sources$year_type)
+sources$year_type = relevel(sources$year_type, ref = 2)
+sources
+
+messages$year_type = as.double(messages$year)
+messages$year_type[messages$year_type == 1 ] <- "Normal"
+messages$year_type[messages$year_type ==2] <- "Covid"
+messages$year_type[messages$year_type ==3] <- "Covid"
+messages$year_type = as.factor(messages$year_type)
+messages$year_type = relevel(messages$year_type, ref = 2)
+messages
+
+
+voices$year_type = as.double(voices$year)
+voices$year_type[voices$year_type == 1 ] <- "Normal"
+voices$year_type[voices$year_type ==2] <- "Covid"
+voices$year_type[voices$year_type ==3] <- "Covid"
+voices$year_type = as.factor(voices$year_type)
+voices$year_type = relevel(voices$year_type, ref = 2)
+voices
+
+communicators$year_type = as.double(communicators$year)
+communicators$year_type[communicators$year_type == 1 ] <- "Normal"
+communicators$year_type[communicators$year_type ==2] <- "Covid"
+communicators$year_type[communicators$year_type ==3] <- "Covid"
+communicators$year_type = as.factor(communicators$year_type)
+communicators$year_type = relevel(communicators$year_type, ref = 2)
 communicators
 ```
+
+
 # data needed for investigation
+## historical data
 ```{r}
 joins
 leaves
 sources
+messages
+voices
+communicators
 ```
+## last 28 days
 ```{r}
 text
 voice
-communicators
 ```
 # extracting by year
 ```{r}
@@ -357,11 +471,51 @@ agg_comm.2021
 
 agg_comms
 
-all_comms = ggplot(data = agg_comms, mapping = aes(x = month, y = total_communicated, fill = year)) + xlab("Month") + ylab("Visitors") + geom_col()+ geom_text(aes(label=total_communicated), position = position_stack(vjust= 0.5),
+all_comms = ggplot(data = agg_comms, mapping = aes(x = month, y = total_communicated, fill = year)) + xlab("Month") + ylab("Total Members Communicated") + geom_col()+ geom_text(aes(label=total_communicated), position = position_stack(vjust= 0.5),
             colour = "white", size = 5) + coord_flip()
-all_comms = all_comms + labs(title = "All Visiting Communicators")
-
+all_comms = all_comms + labs(title = "All Communicating Members")
 all_comms
+```
+# linear models
+## joins linear model
+```{r}
+joins
+joins_lm = lm(new_members ~ month + year_type, data = joins)
+print(summary(joins_lm))
+```
+
+## total messages linear model
+```{r}
+messages
+messages_lm = lm(messages ~ month + year_type, data = messages)
+print(summary(messages_lm))
+```
+## messages experiments
+### including messages_per_communicator in full model
+```{r}
+messages
+messages_lm1 = lm(messages ~ month + year_type + messages_per_communicator, data = messages)
+print(summary(messages_lm1))
+```
+### including messages_per_communicator in full model
+```{r}
+messages
+messages_lm2 = lm(messages_per_communicator ~ month + year_type, data = messages)
+print(summary(messages_lm2))
+```
+
+## voices linear model
+```{r}
+voices
+voices_lm = lm(speaking_minutes ~ month + year_type, data = voices)
+print(summary(voices_lm))
+```
+
+## communicators linear model
+```{r}
+communicators
+communicators_lm = lm(total_communicated ~ month + year_type, data = communicators)
+print(summary(communicators_lm))
 ```
 
 
