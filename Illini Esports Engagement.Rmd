@@ -13,15 +13,14 @@ leave
 source = read.csv("guild-joins-by-source.csv")
 source
 ```
-# Engagement by channels
+# Engagement by last 28 days
 ```{r}
 text = read.csv("popular-text-channels.csv")
 text
-
 voice_channel = read.csv("popular-voice-channels.csv")
 voice_channel
 ```
-# Message Activity
+# Historical Engagement
 ```{r}
 message = read.csv("guild-message-activity.csv")
 message
@@ -40,7 +39,17 @@ communicator
 library(lubridate)
 ```
 ### datetime example
-I grabbed this example from [astrostats.psu](https://astrostatistics.psu.edu/su07/R/html/base/html/format.Date.html)
+I grabbed this example from [astrostats.psu](https://astrostatistics.psu.edu/su07/R/html/base/html/format.Date.html). The Berkely Stat Dates page [Dates and Times in R](https://www.stat.berkeley.edu/~s133/dates.html) was a great reference for the code and values for datetime 
+
+| Code | Value                             |
+|------|-----------------------------------|
+| %d   | Day of the month (decimal number) |
+| %m   | Month (decimal number)            |
+| %b   | Month (abbreviated)               |
+| %B   | Month (full name)                 |
+| %y   | Year (2 digit)                    |
+| %Y   | Year (4 digit)                    |
+
 ```{R}
 ## read in date/time info in format 'm/d/y h:m:s'
 dates <- c("02/27/92", "02/27/92", "01/14/92", "02/28/92", "02/01/92")
@@ -71,16 +80,16 @@ While performing my tests, I struggled understanding format of the date was in, 
 * with a understanding of what I needed to make it possible, I moved on to learn about substring replacement. This took a long time to figure out and understand.
 
 #### removing the plus sign
-a search of [R remove all text after plus sign](https://duckduckgo.com/?q=R+remove+all+text+after+plus+sign&t=ffab&ia=web) helped me break through this barrier I found that this answer on stackoverflow was particularly helpful in removing the `+` sign [How to remove + (plus sign) from string in R?](https://stackoverflow.com/a/35807737)
+a search of [R remove all text after plus sign](https://duckduckgo.com/?q=R+remove+all+text+after+plus+sign&t=ffab&ia=web) helped me break through this barrier I found that this answer on stackoverflow was particularly helpful in removing the `+` sign [How to remove + (plus sign) from string in R?](https://stackoverflow.com/a/35807737). gsub seemed to be the recommend choice among all answers
 
 #### removing the rest of zeros
-I found the following stackoverflow answer that had a example for how to remove the rest of a string [Remove all text before colon](https://stackoverflow.com/a/12297991)
+I found the following stackoverflow answer that had a example for how to remove the rest of a string [Remove all text before colon](https://stackoverflow.com/a/12297991). I couldn't remember how to remove everything after the + so the following example from stevencarlislewalker's blog was particularly helpful in refreshing my memory [Remove (or replace) everything before or after a specified character in R strings](https://stevencarlislewalker.wordpress.com/2013/02/13/remove-or-replace-everything-before-or-after-a-specified-character-in-r-strings/)
 
 ```{r}
 gsub("\\+.*", 'Z', "2021-03-27T00:00:00+00:00")
 ```
-## removing +00:00 from the whole column
-these were tests I ran to automate this for all the datetime rows
+## removing +00:00Z from the whole column
+these were tests I ran to automate this for all the datetime rows.
 ```{r}
 #join[1,1] = gsub("\\+.*", 'Z', join[1,1])
 #join
@@ -112,7 +121,7 @@ joins
 ## testing if I could change the months to become a factor
 ```{r}
 # test to see what would happen if I could convert a months output as a factor
-factor(months(as.POSIXlt(join$interval_start_timestamp)),levels = month.name)
+factor(months(as.POSIXlt(join$interval_start_timestamp)),levels = month.name)[1:20]
 ```
 
 ## Extracting date time
@@ -147,7 +156,6 @@ day = weekdays(as.POSIXlt(source[,1]))
 sources = cbind(source, year, month,day)
 sources = sources[,c(1,5,6,7,2,3,4)]
 sources
-
 ```
 ### leaves extraction
 ```{r}
@@ -216,6 +224,9 @@ communicators = communicators[,c(1,4,5,6,2,3)]
 communicators$total_communicated = communicators$visitors * communicators$pct_communicated/100
 ```
 ## Additional modifications
+The following modifications are my attempts to identify covid years for our analysis, I could edit the csv, but I decided to explore R to practice etl for larger datasets. The Fall 2017 STAT 200 course page on [Regression With Factor Variables](http://courses.atlas.illinois.edu/fall2017/STAT/STAT200/RProgramming/RegressionFactors.html) was particularly helpful as a reference when I was trying to have R use `Covid` as the default factor instead of `Normal`, having `Covid` as the default factor will be important when I generate the linear models and interpret the outputs. I would also recommend reading the berkley stats page on ["Factors in R"](https://www.stat.berkeley.edu/~s133/factors.html) to get a deeper understanding of how to convert factors with dates 
+
+I could have applied the `relevel()` to the `as.factor` line as seen in this stack overflow answer [How to force R to use a specified factor level as reference in a regression?](https://stackoverflow.com/a/47815709), but I realized it was much easier to read/run the code in my head line by line than to pass into multipe functions
 ```{r}
 # marking covid and non covid months
 joins$year_type = as.double(joins$year)
@@ -250,7 +261,6 @@ messages$year_type = as.factor(messages$year_type)
 messages$year_type = relevel(messages$year_type, ref = 2)
 messages
 
-
 voices$year_type = as.double(voices$year)
 voices$year_type[voices$year_type == 1 ] <- "Normal"
 voices$year_type[voices$year_type ==2] <- "Covid"
@@ -284,7 +294,9 @@ communicators
 text
 voice
 ```
-# extracting by year
+# subsetting by year
+
+Originally I planned on aggregating by the year for my bar charts, but when I read through some more examples of aggregates, I found a better method in "Aggregating by category"
 ```{r}
 joins.2019 = subset(joins, year == 2019)
 joins.2020 = subset(joins, year == 2020)
@@ -303,7 +315,7 @@ comm.2020 = subset(communicators, year == 2020)
 comm.2021 = subset(communicators, year == 2021)
 ```
 
-# investigating each year
+# Aggregating by year
 ## 2019
 ```{r}
 joins.2019
@@ -392,6 +404,15 @@ median_comm[order(median_comm$x),]
 ```
 
 # Aggregating by category
+As mentioned in the subsetting by year section, upon reading some examples for aggregating in R, I found that there was a method to aggregate by multiple columns. The following article ["Aggregate in R"](https://r-coder.com/aggregate-r/) was particularly helpful as it had sample code with useful outputs. The second option of using R linear model notation is a bit more intuitive than the first suggestion.
+
+```
+aggregate(df_2$weight, by = list(df_2$feed, df_2$cat_var), FUN = sum)
+
+# Equivalent to:
+aggregate(weight ~ feed + cat_var, data = df_2, FUN = sum)
+```
+
 ## joins
 ```{r}
 joins
@@ -408,7 +429,7 @@ agg_leaves
 ### experimental 3d agg
 ```{r}
 leaves
-agg_leaves = aggregate(leavers ~ month + year + days_in_guild, data = leaves, FUN = sum)
+agg_leaves = aggregate(leavers ~ month + year, data = leaves, FUN = sum)
 agg_leaves
 ```
 
@@ -428,39 +449,69 @@ agg_comms
 ```
 
 
-# visualizations
+# Visualizations
+I realized that using R's base plots were not going to make the cut. I recall that when I was searching for graphing solutions on a different project, I found an appealing graph solution with ggplots. At the time I was using python, so ggplot wasn't a library supported. In another class, the professor introduced ggplots. I could have used excel to generate the plots, but I wanted a learning opportunity to try ggplot on something that wasn't homework or classwork. I knew I needed a stacked bar chart as I needed to compare the changes across the months and years.
+
+After a search on the web, I found the following guide ["How to Create and Customize Bar Plot Using ggplot2 Package in R- One Zero Blog"](https://towardsdatascience.com/how-to-create-and-customize-bar-plot-using-ggplot2-package-in-r-4872004878a7) on the towards data science medium to be particularly helpful, as there was sample code with outputs. I used the sample code from section on bar labels on a stack bar plot as a base and made modifications to fit my data.
+
 ## all joins
+To make it easier for me to input the parameters, I loaded all the aggregate data, since I wasn't sure how the graphs would look.
 ```{r}
 library(ggplot2)
-joins
 
+joins
 agg_joins.2019
 agg_joins.2020
 agg_joins.2021
-
 agg_joins
+```
 
-all_joins = ggplot(data = agg_joins, mapping = aes(x = month, y = new_members, fill = year)) + xlab("Month") + ylab("Total New Members") + geom_col()+ geom_text(aes(label=new_members), position = position_stack(vjust= 0.5),
+I started by substituting the sample parameters with my own dataset. I quickly realized that the graph had some issues on the x axis. The month names were overlapping. 
+```{r}
+all_joins = ggplot(data = agg_joins, mapping = aes(x = month, y = new_members, fill = year)) + xlab("Month") + ylab("Total New Members") + geom_col()+ 
+            geom_text(aes(label=new_members), position = position_stack(vjust= 0.5),
+            colour = "white", size = 5)
+all_joins = all_joins + labs(title = "New Member Joins Across the Year")
+all_joins
+```
+After searching the web, I found a great stack overflow answer [How to maintain size of ggplot with long labels](https://stackoverflow.com/a/41607201) that ultimately influenced the final graphs. 
+```{r}
+all_joins = ggplot(data = agg_joins, mapping = aes(x = month, y = new_members, fill = year)) + xlab("Month") + ylab("Total New Members") + geom_col()+ 
+            geom_text(aes(label=new_members), position = position_stack(vjust= 0.5),
             colour = "white", size = 5) + coord_flip()
 all_joins = all_joins + labs(title = "New Member Joins Across the Year")
 all_joins
 ```
 
+When I first made the graphs, the order of the x axis was backwards from a normal year. For the presentation I used the version above, but when I came back for the final report and final write up, I decided to search for a solution. I knew previously that `coord_flip()` was the cause of the initial reversed order. Searching [ggplot coord_flip() change order of x axis](https://duckduckgo.com/?q=ggplot+coord_flip()+change+order+of+x+axis&t=ffab&ia=web) found the answer I was looking for. The following answer from [Reversed order after coord_flip in R](https://stackoverflow.com/a/34271060) was had the solution I was looking for. I learned that I could use a limits parameter to change the order, as passing `scale_x_discrete()` with out any parameters wouldn't change my graph.
+
+Ultimately this is the final version of the graph. For the report, I scaled the horizontal dimension to be 1920 and had the aspect ratio fixed.
+```{r}
+all_joins = ggplot(data = agg_joins, mapping = aes(x = month, y = new_members, fill = year)) + xlab("Month") + ylab("Total New Members") + geom_col()+ 
+            geom_text(aes(label=new_members), position = position_stack(vjust= 0.5),
+            colour = "white", size = 5) + coord_flip() + scale_x_discrete(limits = rev(levels(agg_joins$month)))
+all_joins = all_joins + labs(title = "New Member Joins Across the Year")
+all_joins
+```
+
 ## all leaves
+I decided to also make a graph for leaves, but it was ultimately scrapped because our analysis was more focused in the new user changes. Perhaps we can return to analyze the leaves
 ```{r}
 leaves
 agg_leaves.2019
 agg_leaves.2020
 agg_leaves.2021
-
 agg_leaves
-
-all_leaves = ggplot(data = agg_leaves, mapping = aes(x = month, y = leavers, fill = year)) + xlab("Month") + ylab("Total Leaves") + geom_col()+ geom_text(aes(label=leavers), position = position_stack(vjust= 0.5),
-            colour = "white", size = 5) + coord_flip()
+```
+```{r}
+all_leaves = ggplot(data = agg_leaves, mapping = aes(x = month, y = leavers, fill = year)) + xlab("Month") + ylab("Total Leaves") + geom_col()+ 
+             geom_text(aes(label=leavers), position = position_stack(vjust= 0.5),
+             colour = "white", size = 5) + coord_flip() + scale_x_discrete(limits = rev(levels(agg_leaves$month)))
 all_leaves = all_leaves + labs(title = "Member Leaves Across the Year")
 
 all_leaves
 ```
+
 ## all communicators
 ```{r}
 communicators
@@ -468,16 +519,20 @@ communicators
 agg_comm.2019
 agg_comm.2020
 agg_comm.2021
-
 agg_comms
-
-all_comms = ggplot(data = agg_comms, mapping = aes(x = month, y = total_communicated, fill = year)) + xlab("Month") + ylab("Total Members Communicated") + geom_col()+ geom_text(aes(label=total_communicated), position = position_stack(vjust= 0.5),
-            colour = "white", size = 5) + coord_flip()
+```
+```{r}
+all_comms = ggplot(data = agg_comms, mapping = aes(x = month, y = total_communicated, fill = year)) + xlab("Month") + ylab("Total Members Communicated") + 
+            geom_col()+ geom_text(aes(label=total_communicated), position = position_stack(vjust= 0.5),
+            colour = "white", size = 5) + coord_flip() + scale_x_discrete(limits = rev(levels(agg_comms$month)))
 all_comms = all_comms + labs(title = "All Communicating Members")
 all_comms
 ```
+
 # linear models
-## joins linear model
+This section contains the code for generating linear models for the other variables we were interested in. I followed my professor's notes for setting up the parameters. For fun I decided to experiment with the messages dataset, as it included an additional variable of `messages_per_communicator` which gives a bit more granularity in comparing between individuals and aggregates for messages.
+
+## new members linear model
 ```{r}
 joins
 joins_lm = lm(new_members ~ month + year_type, data = joins)
