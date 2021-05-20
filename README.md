@@ -19,11 +19,11 @@ With the following datasets, we plan on comparing the changes in membership and 
 ## Time Periods of Joins and Communicators
 ### New members
 New member join data was aggregated by the sum of all members for each month. The majority of joins occurred during September and August, which makes sense as new students are exposed to the organization on Quad Day.
-![New Member Joins Across the Year](https://github.com/progressEdd/Illini-Esports-Analysis/blob/master/Rplot01.png)
+![New Member Joins Across the Year](https://github.com/progressEdd/Illini-Esports-Analysis/blob/master/All%20New%20Members.png)
 
 ### Communicating Members
 Visiting communicator data was aggregated by the sum of total communicated, which is the percent communicated multiplied by the visitors. The majority of communications occurs in August, September, and October, which makes sense as right after Quad Day, most students do not have midterms or exams until mid to late October. Furthermore, Illini Esports also hosts community events such as weekly pickup games, tournament viewing parties, or trivia nights.
-![All Communicating Members](https://github.com/progressEdd/Illini-Esports-Analysis/blob/master/Rplot02.png)
+![All Communicating Members](https://github.com/progressEdd/Illini-Esports-Analysis/blob/master/All%20Communicating%20Members.png)
 
 ## Joins During The Pandemic
 As a result of the stay at home orders, leisure time has increased. Furthermore, without in person events or outdoor activities, online gaming in addition to video chat can stabilize social relationships by helping people stay in touch. We hypothesize the total joins will have a significant increase in new users.
